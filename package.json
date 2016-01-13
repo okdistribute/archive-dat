@@ -4,7 +4,7 @@
   "description": "Turn a dat link into a tarball.",
   "main": "index.js",
   "scripts": {
-    "test": "tape test.js | tap-spec"
+    "test": "tape test/index.js | tap-spec"
   },
   "keywords": [
     "dat", 

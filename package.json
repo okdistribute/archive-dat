@@ -1,7 +1,7 @@
 {
   "name": "archive-dat",
   "version": "1.0.0",
-  "description": "[![NPM](https://nodei.co/npm/archive-dat.png)](https://nodei.co/npm/archive-dat/)",
+  "description": "Turn a dat link into a tarball.",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js | tap-spec"

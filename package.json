@@ -7,7 +7,7 @@
     "test": "tape test/index.js | tap-spec"
   },
   "keywords": [
-    "dat", 
+    "dat",
     "tar",
     "archive",
     "zip",
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/karissa/archive-dat#readme",
   "dependencies": {
     "concat-stream": "^1.5.1",
+    "debug": "^2.2.0",
     "pump": "^1.0.1",
     "tar-stream": "^1.3.1",
     "through2": "^2.0.0"

@@ -6,6 +6,18 @@
   "scripts": {
     "test": "tape test.js | tap-spec"
   },
+  "keywords": [
+    "dat", 
+    "tar",
+    "archive",
+    "zip",
+    "stream",
+    "streaming",
+    "data",
+    "share",
+    "export",
+    "pipe"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/karissa/archive-dat.git"

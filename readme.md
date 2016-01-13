@@ -19,7 +19,7 @@ var archive = require('archive-dat')
 var db = dat()
 var link = 'dat://5aa78bedb1a1c3677725882123b08a15f48538635039c3e2096b64a13ab694b5'
 
-archive(db, link, function (err, tar) {
+archive.create(db, link, function (err, tar) {
   if (err) throw err
   tar.pipe(process.stdout) // goes somewhere!
 })

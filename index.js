@@ -2,7 +2,11 @@ var pump = require('pump')
 var through = require('through2')
 var tar = require('tar-stream')
 
-module.exports = function (dat, link, cb) {
+module.exports = {
+  create: create
+}
+
+function create (dat, link, cb) {
   dat.joinTcpSwarm(link, function (err, link, port, close) {
     if (err) throw err
     var feed = dat.drive.get(link) // the link identifies/verifies the content

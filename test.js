@@ -10,7 +10,7 @@ test('creates tar', function (t) {
   var db = dat()
   db.addFiles([path.join(__dirname, 'fixtures')], function (err, link) {
     t.ifError(err)
-    archive(db, link, function (err, tar) {
+    archive.create(db, link, function (err, tar) {
       t.ifError(err)
       t.end()
     })
@@ -21,7 +21,7 @@ test('check tar contents', function (t) {
   var db = dat()
   db.addFiles([path.join(__dirname, 'fixtures')], function (err, link) {
     t.ifError(err)
-    archive(db, link, function (err, tar) {
+    archive.create(db, link, function (err, tar) {
       t.ifError(err)
       var extract = extractor(t)
       tar.pipe(extract)

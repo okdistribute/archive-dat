@@ -1,27 +1,25 @@
-var archive = require('..')
+var archiveit = require('..')
 var fs = require('fs')
+var raf = require('random-access-file')
 var test = require('tape')
 var concat = require('concat-stream')
-var dat = require('dat')
+var hyperdrive = require('hyperdrive')
 var path = require('path')
+var memdb = require('memdb')
 var tar = require('tar-stream')
 
-test('creates tar', function (t) {
-  var db = dat()
-  db.addFiles([path.join(__dirname, 'fixtures')], function (err, link) {
-    t.ifError(err)
-    archive.create(db, link, function (err, tar) {
-      t.ifError(err)
-      t.end()
-    })
-  })
-})
-
 test('check tar contents', function (t) {
-  var db = dat()
-  db.addFiles([path.join(__dirname, 'fixtures')], function (err, link) {
-    t.ifError(err)
-    archive.create(db, link, function (err, tar) {
+  var drive = hyperdrive(memdb())
+  var archive = drive.createArchive()
+  var ws = archive.createFileWriteStream('hello.txt')
+
+  ws.write('hello')
+  ws.write('world')
+  ws.end()
+
+  archive.finalize(function () {
+    t.ok(archive.key.toString('hex'))
+    archiveit(archive, function (err, tar) {
       t.ifError(err)
       var extract = extractor(t)
       tar.pipe(extract)
@@ -37,19 +35,17 @@ function extractor (t) {
       total += 1
       callback()
     })
-    if (header.type === 'directory') {
-      t.equals(header.name, 'folder')
-    } else if (header.type === 'file') {
+    if (header.type === 'file') {
+      t.equals(header.name, 'hello.txt')
       stream.pipe(concat(function (data) {
-        var csv = fs.readFileSync(path.join(__dirname, 'fixtures', header.name)).toString()
-        t.equals(csv, data.toString())
+        t.equals('helloworld', data.toString())
       }))
     }
     stream.resume()
   })
 
   extract.on('finish', function () {
-    t.equals(total, 3)
+    t.equals(total, 1)
     t.end()
   })
   return extract

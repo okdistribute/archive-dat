@@ -27,11 +27,9 @@ test('check tar contents', function (t) {
 
   archive.finalize(function () {
     t.ok(archive.key.toString('hex'))
-    archiveit(archive, function (err, tar) {
-      t.ifError(err)
-      var extract = extractor(t)
-      tar.pipe(extract)
-    })
+    var tar = archiveit(archive)
+    var extract = extractor(t)
+    tar.pipe(extract)
   })
 })
 
@@ -69,9 +67,10 @@ test('use big file', function (t) {
   var read = from2(crypto.randomBytes(12 * 256 * 100).toString())
   pump(read, ws, function () {
     archive.finalize(function () {
-      console.log(archive.key.toString('hex'))
-      archiveit(archive, function (err, tar) {
-        t.ifError(err)
+      var tar = archiveit(archive)
+
+      tar.resume()
+      tar.on('end', function () {
         t.end()
       })
     })

@@ -10,11 +10,14 @@ module.exports = function create (archive, cb) {
     entry.mtime = new Date(entry.mtime)
     entry.ctime = new Date(entry.ctime)
     entry.size = entry.length
-    var writeStream = pack.entry(entry, next)
+    var writeStream = pack.entry(entry, function () {
+      debug('write stream end')
+    })
     var content = archive.createFileReadStream(entry)
     pump(content, writeStream, function (err) {
       if (err) return cb(err)
       debug('next')
+      next()
     })
   })
 

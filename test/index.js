@@ -1,8 +1,10 @@
 var archiveit = require('..')
 var fs = require('fs')
 var crypto = require('crypto')
+var pump = require('pump')
 var raf = require('random-access-file')
 var test = require('tape')
+var from2 = require('from2-string')
 var concat = require('concat-stream')
 var hyperdrive = require('hyperdrive')
 var path = require('path')
@@ -64,14 +66,14 @@ test('use big file', function (t) {
   var archive = drive.createArchive()
   var ws = archive.createFileWriteStream('hello.txt')
 
-  ws.write(crypto.randomBytes(12 * 256 * 100))
-  ws.end()
-
-  archive.finalize(function () {
-    t.ok(archive.key.toString('hex'))
-    archiveit(archive, function (err, tar) {
-      t.ifError(err)
-      t.end()
+  var read = from2(crypto.randomBytes(12 * 256 * 100).toString())
+  pump(read, ws, function () {
+    archive.finalize(function () {
+      console.log(archive.key.toString('hex'))
+      archiveit(archive, function (err, tar) {
+        t.ifError(err)
+        t.end()
+      })
     })
   })
 })
